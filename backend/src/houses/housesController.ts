@@ -28,43 +28,20 @@ export class HousesController {
     }
 
     // {} get all in form of { {obj} , {obj} ...}
-    // what is diff bt req.params and req.body ?
     getHouses(req: express.Request, res: express.Response) {
         HousesController.db.getRecords(HousesController.housesCollection, {})
             .then((results) => res.send({fn: 'getHouses', status: 'success', data: results}).end())
             .catch((reason) => res.status(500).send(reason).end());
 
     }
-/*
 
-    /getProjects
-    //sends a json object with all projects in the system that match :year
-    getProjects(req: express.Request, res: express.Response) {
-        const semester = req.params.semester;
-        ProjectsController.db.getRecords(ProjectsController.projectsTable, { semester: semester })
-            .then((results) => res.send({ fn: 'getProjects', status: 'success', data: results }).end())
-            .catch((reason) => res.status(500).send(reason).end());
-
-    }
-
-    //getProject
-    //sends the specific project as JSON with id=:id
-    getProject(req: express.Request, res: express.Response) {
-        const semester = req.params.semester;
+    deleteHouse(req: express.Request, res: express.Response) {
         const id = Database.stringToId(req.params.id);
-        ProjectsController.db.getOneRecord(ProjectsController.projectsTable, { _id: id, semester: semester })
-            .then((results) => res.send({ fn: 'getProject', status: 'success', data: results }).end())
+        HousesController.db.deleteRecord(HousesController.housesCollection, { _id: id })
+            .then((results) => results ? (res.send({ fn: 'deleteHouse', status: 'success' })) : (res.send({ fn: 'deleteHouse', status: 'failure', data: 'Not found' })).end())
             .catch((reason) => res.status(500).send(reason).end());
     }
-    //addProject
-    //adds the project to the database
-    addProject(req: express.Request, res: express.Response) {
-        const proj: ProjectsModel = ProjectsModel.fromObject(req.body);
 
-        ProjectsController.db.addRecord(ProjectsController.projectsTable, proj.toObject())
-            .then((result: boolean) => res.send({ fn: 'addProject', status: 'success' }).end())
-            .catch((reason) => res.status(500).send(reason).end());
-    }
-*/
 
+    
 }

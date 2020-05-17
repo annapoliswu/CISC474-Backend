@@ -28,7 +28,7 @@ export class SecurityController {
     //expects email and password fields to be set in the body of the post request
     //sends a success message to caller on success, or a failure status code on failure
     register(req: express.Request, res: express.Response, next: express.NextFunction) {
-        const user: UserModel = new UserModel(req.body.email, req.body.password, []);
+        const user: UserModel = new UserModel(req.body.email, req.body.password, [], []);
         SecurityController.db.getOneRecord(SecurityController.usersTable, { email: req.body.email })
             .then((userRecord: any) => {
                 if (userRecord) return res.status(400).send({ fn: 'register', status: 'failure', data: 'User Exits' }).end();
@@ -50,7 +50,7 @@ export class SecurityController {
     //returns a success messager to the client on success, a failure status code on failure
     changePwd(req: express.Request, res: express.Response, next: express.NextFunction) {
         if (!req.body.password) res.status(400).send({ fn: 'changePwd', status: 'failure' }).end();
-        const user: UserModel = new UserModel(req.body.authUser.email, req.body.password, req.body.favorites);
+        const user: UserModel = new UserModel(req.body.authUser.email, req.body.password, req.body.favorites, req.body.listings);
         SecurityController.db.updateRecord(SecurityController.usersTable, {email: user.email},{ $set: {password: user.password }}).then((result:Boolean)=>{
             if (result)
                 res.send({ fn: 'changePwd', status: 'success' }).end();
@@ -76,7 +76,7 @@ export class SecurityController {
     getFavorites(req: express.Request, res: express.Response, next: express.NextFunction){
         const email = req.params.email;
         SecurityController.db.getOneRecord(SecurityController.usersTable, {email : email})
-        .then((results) => res.send({fn: 'getFavorites', status: 'success', data: results.favorites}).end()) 
+        .then((results) => res.send({fn: 'getFavs', status: 'success', data: results.favorites}).end()) 
         .catch((reason) => res.status(500).send(reason).end()); 
 
     }
@@ -89,8 +89,39 @@ export class SecurityController {
             res.send({ fn: 'deleteFav', status: 'success' }).end();
         else 
             res.status(400).send({ fn: 'deleteFav', status: 'failure' }).end();
-    });
+        });
     }
+
+    addListing(req: express.Request, res: express.Response, next: express.NextFunction){ 
+        const email = req.body.email;
+        const id = req.body.id;
+        SecurityController.db.updateRecord(SecurityController.usersTable, {email: email},{$addToSet: {listings: id}}).then((result:Boolean)=>{ 
+            if (result)
+                res.send({ fn: 'addListing', status: 'success', email: email }).end();
+            else 
+                res.status(400).send({ fn: 'addListing', status: 'failure' }).end();
+        });
+    }
+
+    getListings(req: express.Request, res: express.Response, next: express.NextFunction){ 
+        const email = req.params.email;
+        SecurityController.db.getOneRecord(SecurityController.usersTable, {email : email})
+        .then((results) => res.send({fn: 'getListings', status: 'success', data: results.listings}).end()) 
+        .catch((reason) => res.status(500).send(reason).end()); 
+    }
+
+    deleteListing(req: express.Request, res: express.Response, next: express.NextFunction){ 
+        const email = req.params.email;
+        const id = req.params.id;
+        SecurityController.db.updateRecord(SecurityController.usersTable, {email : email}, {$pull: {listings: id} }).then((result:Boolean)=>{ 
+        if (result)
+            res.send({ fn: 'deleteListing', status: 'success' }).end();
+        else 
+            res.status(400).send({ fn: 'deleteListing', status: 'failure' }).end();
+        });
+    }
+
+
 /*
     deleteFavorite(req: express.Request, res: express.Response, next: express.NextFunction) {
         return;
