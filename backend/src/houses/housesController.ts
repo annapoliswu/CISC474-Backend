@@ -34,4 +34,14 @@ export class HousesController {
             .catch((reason) => res.status(500).send(reason).end());
 
     }
+
+    deleteHouse(req: express.Request, res: express.Response) {
+        const id = Database.stringToId(req.params.id);
+        HousesController.db.deleteRecord(HousesController.housesCollection, { _id: id })
+            .then((results) => results ? (res.send({ fn: 'deleteHouse', status: 'success' })) : (res.send({ fn: 'deleteHouse', status: 'failure', data: 'Not found' })).end())
+            .catch((reason) => res.status(500).send(reason).end());
+    }
+
+
+    
 }

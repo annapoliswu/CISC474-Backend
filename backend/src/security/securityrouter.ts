@@ -19,8 +19,8 @@ export class SecurityRouter extends AppRouter{
         this.expressRouter.delete('/:email/favorites/:id',[SecurityMiddleware.RequireAuth], securityController.deleteFavorite);
         this.expressRouter.get('/:email/favorites/',[SecurityMiddleware.RequireAuth], securityController.getFavorites);
         
-        this.expressRouter.post('/listings', securityController.addListing);
-        this.expressRouter.get('/:email/listings', securityController.getListings);
-        this.expressRouter.delete('/:email/listings', securityController.deleteListing);
+        this.expressRouter.post('/listings', [SecurityMiddleware.RequireAuth], securityController.addListing);
+        this.expressRouter.get('/:email/listings', [SecurityMiddleware.RequireAuth], securityController.getListings);
+        this.expressRouter.delete('/:email/listings/:id', [SecurityMiddleware.RequireAuth], securityController.deleteListing);
     }    
 }

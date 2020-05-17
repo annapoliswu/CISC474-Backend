@@ -15,6 +15,8 @@ export class HousesRouter extends AppRouter{
 
         this.expressRouter.get('/', HousesRouter.hController.getHouses); 
         this.expressRouter.post('/', HousesRouter.hController.postHouse); //cannot post via url? must use postmates with req as JSON
+        this.expressRouter.delete('/:id',[SecurityMiddleware.RequireAuth], HousesRouter.hController.deleteHouse);
+        
         /*
         this.expressRouter.get('/semesters',ProjectsRouter.projController.getSemesters);
         this.expressRouter.get('/projectNumbers/:semester',ProjectsRouter.projController.getProjectNumbers);
