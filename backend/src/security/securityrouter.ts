@@ -14,5 +14,12 @@ export class SecurityRouter extends AppRouter{
         this.expressRouter.post('/login',securityController.login);
         this.expressRouter.post('/register',securityController.register);
         this.expressRouter.post('/changepwd',[SecurityMiddleware.RequireAuth],securityController.changePwd);
+
+        this.expressRouter.post('/favorites', securityController.addFavorite);
+        this.expressRouter.delete('/:email/favorites/:id', securityController.deleteFavorite);
+        //this.expressRouter.post('/addfavorite', [SecurityMiddleware.RequireAuth],securityController.addFavorite);
+        this.expressRouter.get('/:email/favorites/', securityController.getFavorites);
+        //this.expressRouter.get('/:email/favorites', [SecurityMiddleware.RequireAuth],securityController.getFavorites);
+        //this.expressRouter.delete('/favorites', [SecurityMiddleware.RequireAuth],securityController.deleteFavorite);
     }    
 }
