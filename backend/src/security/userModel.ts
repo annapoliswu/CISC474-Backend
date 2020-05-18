@@ -6,7 +6,7 @@ export class UserModel{
     email = '';
     private _password='';
     favorites:Array<string> = []; //["test", "5eb5a1fbe2e28b1d9c2aafc2"]
-
+    listings:Array<string> = [];
     //when user password is set through here, it is stored encrypted
     set password(val:string){
         this._password=UserModel.encryptString(val);
@@ -17,21 +17,22 @@ export class UserModel{
     
 
     //encrypts password
-    public constructor(email:string,password:string,favorites:Array<string>){
+    public constructor(email:string,password:string,favorites:Array<string>,listings:Array<string>){
         this.email=email;
         this.password=password;
         this.favorites = favorites;
+        this.listings =  listings;
     }
 
     //does not encrypt password, expects already encrypted password
     static fromObject=(obj:any):UserModel=>{
-        const mdl=new UserModel(obj.email,'',obj.favorites);
+        const mdl=new UserModel(obj.email,'',obj.favorites, obj.listings);
         mdl._password=obj.password;
         return mdl;
     }
 
     //includes encrypted password
-    toObject=(): any=> ({email: this.email,password: this.password, favorites: this.favorites});
+    toObject=(): any=> ({email: this.email,password: this.password, favorites: this.favorites, listings: this.listings});
 
     //compares unencrypted password to encrypted password
     validatePassword(password:string):boolean{
