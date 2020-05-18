@@ -27,6 +27,15 @@ export class HousesController {
             .catch((reason) => res.status(500).send(reason).end());
     }
 
+    postPhoto(req: express.Request, res: express.Response){
+        const photo = req.body;
+        console.log(photo);
+
+        HousesController.db.addRecord(HousesController.housesCollection, photo)  //turns HouseModel obj back into sendable data
+            .then((results) => res.send({fn: 'postHouse', status: 'success', data: results}).end())
+            .catch((reason) => res.status(500).send(reason).end());
+    }
+
     // {} get all in form of { {obj} , {obj} ...}
     // what is diff bt req.params and req.body ?
     getHouses(req: express.Request, res: express.Response) {

@@ -13,6 +13,9 @@ export class HousesModel{
     sqfeet = '';
     contactemail = '';
     contactphone = '';
+    photos = [];
+    lat = null;
+    long = null;
 
     //basically make new HouseModel and this.title = req.body.title?
     static fromObject(object:any):HousesModel{
@@ -29,6 +32,9 @@ export class HousesModel{
         h.sqfeet = object.sqfeet;
         h.contactemail = object.contactemail;
         h.contactphone = object.contactphone;
+        h.photos = object.photos;
+        h.lat = object.lat;
+        h.long = object.long;
         return h;
     }
     
@@ -45,7 +51,10 @@ export class HousesModel{
             bathrooms: this.bathrooms,
             sqfeet: this.sqfeet,
             contactemail: this.contactemail,
-            contactphone: this.contactphone
+            contactphone: this.contactphone,
+            photos: this.photos,
+            lat: this.lat,
+            long: this.long,
             };
     }
 }
